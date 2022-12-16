@@ -37,7 +37,8 @@ class CognitoService:
         )
         return full_url
 
-    def exchange_code_for_token(self, code, requests_client=None):
+    def exchange_code_for_token(self, code, requests_client=None,
+            token_only=True):
         token_url = f"{self.domain}/oauth2/token"
         data = {
             "code": code,
@@ -64,6 +65,8 @@ class CognitoService:
             raise FlaskAWSCognitoError(
                 f"no access token returned for code {response_json}"
             )
+        if not token_only:
+            return response_json
         access_token = response_json["access_token"]
         return access_token
 
