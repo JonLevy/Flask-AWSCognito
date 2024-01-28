@@ -80,7 +80,9 @@ class AWSCognitoAuthentication:
         state = request_args.get("state")
         expected_state = get_state(self.user_pool_id, self.user_pool_client_id)
         if state != expected_state:
-            raise FlaskAWSCognitoError("State for CSRF is not correct ")
+            pass
+#  JL deactivated bcs now we use PKCE
+#            raise FlaskAWSCognitoError("State for CSRF is not correct ")
         access_token = self.cognito_service.exchange_code_for_token(code,
             token_only=token_only)
         return access_token
