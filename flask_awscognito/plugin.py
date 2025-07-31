@@ -1,6 +1,7 @@
 from functools import wraps
 
-from flask import _app_ctx_stack, abort, request, make_response, jsonify, g
+from flask.globals import app_ctx
+from flask import abort, request, make_response, jsonify, g
 from flask_awscognito.utils import extract_access_token, get_state
 from flask_awscognito.services import cognito_service_factory, token_service_factory
 from flask_awscognito.exceptions import FlaskAWSCognitoError, TokenVerifyError
@@ -46,7 +47,7 @@ class AWSCognitoAuthentication:
 
     @property
     def token_service(self):
-        ctx = _app_ctx_stack.top
+        ctx = app_ctx
         if ctx is not None:
             if not hasattr(ctx, CONTEXT_KEY_TOKEN_SERVICE):
                 token_service = self.token_service_factory(
@@ -57,7 +58,7 @@ class AWSCognitoAuthentication:
 
     @property
     def cognito_service(self):
-        ctx = _app_ctx_stack.top
+        ctx = app_ctx
         if ctx is not None:
             if not hasattr(ctx, CONTEXT_KEY_COGNITO_SERVICE):
                 cognito_service = self.cognito_service_factory(
